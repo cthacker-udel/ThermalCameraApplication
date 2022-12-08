@@ -4,44 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".HomePage">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
         android:theme="@style/Theme.ThermalApplication.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/black"
-            app:popupTheme="@style/Theme.ThermalApplication.PopupOverlay">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Thermal Camera Application"
-                android:textColor="@color/white" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textSize="11dp"
-                android:text="Authors: Cameron Thacker, Christopher Bennett, Treavien Holley, Mike Maverick "
-                android:textColor="@color/white"
-                android:id="@+id/authorsText"
-                />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.ThermalApplication.PopupOverlay" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include layout="@layout/content_home_page" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

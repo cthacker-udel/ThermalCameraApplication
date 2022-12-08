@@ -13,28 +13,18 @@
         android:theme="@style/Theme.ThermalApplication"
         tools:targetApi="31">
         <activity
-            android:name=".BOQActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".CommunityBoard"
+            android:name=".HomePage"
             android:exported="false"
-            android:label="@string/title_activity_community_board"
+            android:label="@string/title_activity_home_page"
             android:theme="@style/Theme.ThermalApplication.NoActionBar">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".PictureViewer"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:name=".ui.login.Loginpage"
+            android:exported="false"
+            android:label="@string/title_activity_loginpage" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

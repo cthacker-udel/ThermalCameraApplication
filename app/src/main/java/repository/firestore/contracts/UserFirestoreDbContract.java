@@ -1,0 +1,19 @@
+package repository.firestore.contracts;
+
+public final class UserFirestoreDbContract {
+
+    public static final String COLLECTION_NAME = "users";
+
+    public static final String DOCUMENT_ID = "document_id";
+
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_PASSWORD = "password";
+    public static final String FIELD_DOES_HAVE_PROFILE_PICTURE = "does_have_profile_picture";
+    public static final String FIELD_PROFILE_PICTURE_URL = "profile_picture_url";
+    public static final String FIELD_FIRST_NAME = "first_name";
+    public static final String FIELD_LAST_NAME = "last_name";
+    public static final String FIELD_EMAIL = "email";
+    public static final String FIELD_PHONE_NUMBER = "phone_number";
+    public static final String FIELD_LAST_LOGIN = "last_login";
+
+}
