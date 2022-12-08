@@ -6,6 +6,7 @@ public final class UserFirestoreDbContract {
 
     public static final String DOCUMENT_ID = "document_id";
 
+    public static final String USERNAME_ID = "username_id";
     public static final String FIELD_USERNAME = "username";
     public static final String FIELD_PASSWORD = "password";
     public static final String FIELD_DOES_HAVE_PROFILE_PICTURE = "does_have_profile_picture";

@@ -10,6 +10,8 @@ public class PostFirestoreDbContract {
 
     public static final String FIELD_AUTHOR = "author";
 
+    public static final String FIELD_CONTENT = "content";
+
     public static final String FIELD_POST_IMAGE_URL = "post_image_url";
 
     public static final String FIELD_NUMBER_UPVOTES = "number_upvotes";

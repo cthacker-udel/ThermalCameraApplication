@@ -13,6 +13,8 @@ public class Post {
     private String author;
 
     private String postImageUrl;
+    private String content;
+
     private int numberUpvotes;
     private int numberComments;
     private int numberTrophies;
@@ -21,6 +23,14 @@ public class Post {
     public Post(String author, String postImageUrl) {
         this.author = author;
         this.postImageUrl = postImageUrl;
+    }
+
+    public String getContent() {
+        return this.content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getDocumentId() {
