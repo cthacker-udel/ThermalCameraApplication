@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "566134886067",
+    "project_id": "thermalcameraapplication",
+    "storage_bucket": "thermalcameraapplication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566134886067:android:9ee5237ae0de0a0d0feac6",
+        "android_client_info": {
+          "package_name": "com.example.thermalapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566134886067-3dgeelt86rg662mu9qq87a9tnc6srfv4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnKfcuNzqywm555G8iLf8Rx6Ov5RRWLvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566134886067-3dgeelt86rg662mu9qq87a9tnc6srfv4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
