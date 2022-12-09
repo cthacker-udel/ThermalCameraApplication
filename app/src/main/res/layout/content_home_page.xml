@@ -44,6 +44,7 @@
             app:layout_editor_absoluteX="50dp"
             />
         <ImageView
+            android:id="@+id/userSettingsIcon"
             android:layout_width="45dp"
             android:layout_height="75dp"
             android:layout_marginLeft="5dp"

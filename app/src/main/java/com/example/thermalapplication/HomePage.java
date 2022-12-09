@@ -1,8 +1,10 @@
 package com.example.thermalapplication;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.thermalapplication.usersettings.UserSettings;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,10 +37,12 @@ public class HomePage extends AppCompatActivity {
     private ActivityHomePageBinding binding;
     FirebaseFirestore db;
     PostsFirestoreManager postsFirestoreManager;
+    ImageView userSettingsIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.userSettingsIcon = findViewById(R.id.userSettingsIcon);
         this.db = FirebaseFirestore.getInstance();
         this.postsFirestoreManager = new PostsFirestoreManager(this.db);
         Post[] posts = this.postsFirestoreManager.fetchAllPosts();
@@ -57,6 +62,13 @@ public class HomePage extends AppCompatActivity {
                 homepageScrollView.addView(textView);
             });
         }
+
+        this.userSettingsIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomePage.this, UserSettings.class));
+            }
+        });
     }
 
 }
