@@ -88,6 +88,6 @@ public interface iFirestoreManager {
      * Sets the context of the class implementing this interface
      * @param ctx - The context we are setting
      */
-    void setContext(Context ctx);
+    <I> I setContext(Context ctx);
 
 }

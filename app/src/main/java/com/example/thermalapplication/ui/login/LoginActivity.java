@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thermalapplication.R;
-import com.example.thermalapplication.ui.login.LoginViewModel;
-import com.example.thermalapplication.ui.login.LoginViewModelFactory;
 import com.example.thermalapplication.databinding.ActivityLoginpageBinding;
 
 public class LoginActivity extends AppCompatActivity {

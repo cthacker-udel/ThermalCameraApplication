@@ -15,6 +15,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Manager class that sub-classes will inherit, which houses all important methods one might encounter when trying to
+ * utilize firebase firestore within their application
+ */
 public class FirestoreManager implements iFirestoreManager {
     FirebaseFirestore client;
     Context ctx;
@@ -117,8 +121,9 @@ public class FirestoreManager implements iFirestoreManager {
     }
 
     @Override
-    public void setContext(Context ctx) {
+    public FirestoreManager setContext(Context ctx) {
         this.ctx = ctx;
+        return this;
     }
 
     @Override
