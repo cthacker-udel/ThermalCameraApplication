@@ -29,63 +29,71 @@ public class Post {
         return this.content;
     }
 
-    public void setContent(String content) {
+    public Post setContent(String content) {
         this.content = content;
+        return this;
     }
 
     public String getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
+    public Post setDocumentId(String documentId) {
         this.documentId = documentId;
+        return this;
     }
 
     public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(String authorId) {
+    public Post setAuthorId(String authorId) {
         this.authorId = authorId;
+        return this;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public Post setAuthor(String author) {
         this.author = author;
+        return this;
     }
 
     public String getPostImageUrl() {
         return postImageUrl;
     }
 
-    public void setPostImageUrl(String postImageUrl) {
+    public Post setPostImageUrl(String postImageUrl) {
         this.postImageUrl = postImageUrl;
+        return this;
     }
 
     public int getNumberUpvotes() {
         return numberUpvotes;
     }
 
-    public void setNumberUpvotes(int numberUpvotes) {
+    public Post setNumberUpvotes(int numberUpvotes) {
         this.numberUpvotes = numberUpvotes;
+        return this;
     }
 
     public int getNumberComments() {
         return numberComments;
     }
 
-    public void setNumberComments(int numberComments) {
+    public Post setNumberComments(int numberComments) {
         this.numberComments = numberComments;
+        return this;
     }
 
     public int getNumberTrophies() {
         return numberTrophies;
     }
 
-    public void setNumberTrophies(int numberTrophies) {
+    public Post setNumberTrophies(int numberTrophies) {
         this.numberTrophies = numberTrophies;
+        return this;
     }
 }
