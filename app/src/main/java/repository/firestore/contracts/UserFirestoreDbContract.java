@@ -16,5 +16,7 @@ public final class UserFirestoreDbContract {
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_PHONE_NUMBER = "phone_number";
     public static final String FIELD_LAST_LOGIN = "last_login";
+    public static final String FIELD_PASSWORD_ITERATIONS = "password_iterations";
+    public static final String FIELD_PASSWORD_SALT = "password_salt";
 
 }

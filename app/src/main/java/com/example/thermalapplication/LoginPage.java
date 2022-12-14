@@ -65,7 +65,11 @@ public final class LoginPage extends AppCompatActivity {
         }
 
         public void printState() {
-            System.out.printf("Username: %s | Password: %s", this.usernameValid, this.passwordValid);
+            System.out.printf("Username: %s | Password: %s\n", this.usernameValid, this.passwordValid);
+        }
+
+        public boolean isCompletelyValid() {
+            return this.passwordValid && this.usernameValid;
         }
     }
 
@@ -78,7 +82,6 @@ public final class LoginPage extends AppCompatActivity {
     public static volatile int[] usernameIds;
     public static volatile boolean[] displayingUsernameErrors;
     public static volatile MutableLiveData<FormState> formState = new MutableLiveData<>();
-
     public static volatile int[] passwordIds;
     public static volatile boolean[] displayingPasswordErrors;
 
@@ -235,9 +238,14 @@ public final class LoginPage extends AppCompatActivity {
         formState.observe(this, new Observer<FormState>() {
             @Override
             public void onChanged(FormState formState) {
-                System.out.println("Observed");
-                formState.printState();
                 loginButton.setEnabled(formState.isPasswordValid() && formState.isUsernameValid());
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // validate login
             }
         });
 

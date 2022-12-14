@@ -14,6 +14,8 @@ public class User {
 
     private String username;
     private String password;
+    private String passwordSalt;
+    private Integer passwordIterations;
 
     private boolean doesHaveProfilePicture;
     private String profilePictureUrl;
@@ -40,6 +42,8 @@ public class User {
         this.lastName = document.get(UserFirestoreDbContract.FIELD_LAST_NAME, String.class);
         this.email = document.get(UserFirestoreDbContract.FIELD_EMAIL, String.class);
         this.phoneNumber = document.get(UserFirestoreDbContract.FIELD_PHONE_NUMBER, String.class);
+        this.passwordIterations = document.get(UserFirestoreDbContract.FIELD_PASSWORD_ITERATIONS, Integer.class);
+        this.passwordSalt = document.get(UserFirestoreDbContract.FIELD_PASSWORD_SALT, String.class);
     }
 
     public String getUserId() {
@@ -120,5 +124,25 @@ public class User {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    public Integer getPasswordIterations() {
+        return passwordIterations;
+    }
+
+    public void setPasswordIterations(Integer passwordIterations) {
+        this.passwordIterations = passwordIterations;
+    }
+
+    public boolean isDoesHaveProfilePicture() {
+        return doesHaveProfilePicture;
     }
 }
