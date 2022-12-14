@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Objects;
 
 import helpers.RegularExpressions;
 import repository.firestore.manager.UserFirestoreManager;
@@ -38,6 +42,33 @@ public final class LoginPage extends AppCompatActivity {
             "\u2022 Password must contain at least 1 lowercase letter"
     };
 
+    public static class FormState {
+        private boolean usernameValid = false;
+        private boolean passwordValid = false;
+
+        public boolean isUsernameValid() {
+            return usernameValid;
+        }
+
+        public FormState setUsernameValid(boolean usernameValid) {
+            this.usernameValid = usernameValid;
+            return this;
+        }
+
+        public boolean isPasswordValid() {
+            return passwordValid;
+        }
+
+        public FormState setPasswordValid(boolean passwordValid) {
+            this.passwordValid = passwordValid;
+            return this;
+        }
+
+        public void printState() {
+            System.out.printf("Username: %s | Password: %s", this.usernameValid, this.passwordValid);
+        }
+    }
+
     public Button loginButton;
     public Button signUpButton;
     public EditText usernameInput;
@@ -46,22 +77,24 @@ public final class LoginPage extends AppCompatActivity {
     public static UserFirestoreManager userFirestoreManager;
     public static volatile int[] usernameIds;
     public static volatile boolean[] displayingUsernameErrors;
-    public static volatile boolean usernameValid = false;
+    public static volatile MutableLiveData<FormState> formState = new MutableLiveData<>();
 
     public static volatile int[] passwordIds;
     public static volatile boolean[] displayingPasswordErrors;
-    public static volatile boolean passwordValid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
+        formState.setValue(new FormState());
         this.loginButton = (Button)findViewById(R.id.loginPageLoginButton);
         this.signUpButton = (Button)findViewById(R.id.loginPageSignUpButton);
         this.usernameInput = (EditText) findViewById(R.id.loginPageUsernameInput);
         this.passwordInput = (EditText) findViewById(R.id.loginPagePasswordInput);
         this.formErrors = (LinearLayout) findViewById(R.id.loginPageFormErrors);
         userFirestoreManager = new UserFirestoreManager(FirebaseFirestore.getInstance());
+        this.loginButton.setEnabled(false);
+
         usernameIds = new int[]{ View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId() };
         displayingUsernameErrors = new boolean[] { false, false, false, false, false };
 
@@ -103,11 +136,12 @@ public final class LoginPage extends AppCompatActivity {
                         }
                     }
                 }
+                formState.setValue(formState.getValue().setPasswordValid(!foundErrors && s.toString().length() > 0));
+
                 if (!foundErrors && s.toString().length() > 0) {
                     TextView loginFormPasswordTitle = (TextView)findViewById(R.id.loginFormPasswordTitle);
                     loginFormPasswordTitle.setTextColor(Color.parseColor("#4CAF50"));
                     loginFormPasswordTitle.setText("Valid Password!");
-                    usernameValid = true;
                 } else if (foundErrors && s.toString().length() > 0) {
                     TextView loginFormPasswordTitle = (TextView)findViewById(R.id.loginFormPasswordTitle);
                     loginFormPasswordTitle.setTextColor(Color.parseColor("#FF0000"));
@@ -168,11 +202,12 @@ public final class LoginPage extends AppCompatActivity {
                         }
                     }
                 }
+
+                formState.setValue(formState.getValue().setUsernameValid(!foundErrors && s.toString().length() > 0));
                 if (!foundErrors && s.toString().length() > 0) {
                     TextView loginFormUsernameTitle = (TextView)findViewById(R.id.loginFormUsernameTitle);
                     loginFormUsernameTitle.setTextColor(Color.parseColor("#4CAF50"));
                     loginFormUsernameTitle.setText("Valid Username!");
-                    usernameValid = true;
                 } else if (foundErrors && s.toString().length() > 0) {
                     TextView loginFormUsernameTitle = (TextView)findViewById(R.id.loginFormUsernameTitle);
                     loginFormUsernameTitle.setTextColor(Color.parseColor("#FF0000"));
@@ -196,6 +231,16 @@ public final class LoginPage extends AppCompatActivity {
                 }
             }
         });
+
+        formState.observe(this, new Observer<FormState>() {
+            @Override
+            public void onChanged(FormState formState) {
+                System.out.println("Observed");
+                formState.printState();
+                loginButton.setEnabled(formState.isPasswordValid() && formState.isUsernameValid());
+            }
+        });
+
     }
 
 }
