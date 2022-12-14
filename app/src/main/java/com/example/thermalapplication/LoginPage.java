@@ -1,11 +1,8 @@
 package com.example.thermalapplication;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,18 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.thermalapplication.databinding.ActivityLoginPageBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.core.FirestoreClient;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.locks.ReentrantLock;
 
 import helpers.RegularExpressions;
 import repository.firestore.manager.UserFirestoreManager;
@@ -44,14 +30,27 @@ public final class LoginPage extends AppCompatActivity {
             "\u2022 Username must contain at least 1 lowercase letter"
     };
 
+    final String[] PasswordValidationMessages = new String[] {
+            "\u2022 Password must contain at least 7 characters",
+            "\u2022 Password must contain at least one digit",
+            "\u2022 Password must contain at least 1 symbol",
+            "\u2022 Password must contain at least 1 uppercase letter",
+            "\u2022 Password must contain at least 1 lowercase letter"
+    };
+
     public Button loginButton;
     public Button signUpButton;
     public EditText usernameInput;
     public EditText passwordInput;
     public LinearLayout formErrors;
-    public static volatile int[] ids;
-    public static volatile boolean[] displaying;
     public static UserFirestoreManager userFirestoreManager;
+    public static volatile int[] usernameIds;
+    public static volatile boolean[] displayingUsernameErrors;
+    public static volatile boolean usernameValid = false;
+
+    public static volatile int[] passwordIds;
+    public static volatile boolean[] displayingPasswordErrors;
+    public static volatile boolean passwordValid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,74 @@ public final class LoginPage extends AppCompatActivity {
         this.passwordInput = (EditText) findViewById(R.id.loginPagePasswordInput);
         this.formErrors = (LinearLayout) findViewById(R.id.loginPageFormErrors);
         userFirestoreManager = new UserFirestoreManager(FirebaseFirestore.getInstance());
-        ids = new int[]{ View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId() };
-        displaying = new boolean[] { false, false, false, false, false };
+        usernameIds = new int[]{ View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId() };
+        displayingUsernameErrors = new boolean[] { false, false, false, false, false };
+
+        passwordIds = new int[]{ View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId(), View.generateViewId() };
+        displayingPasswordErrors = new boolean[] { false, false, false, false, false };
+
+
+        this.passwordInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // not used
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // not used
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean[] passwordValidation = RegularExpressions.ValidatePassword(s.toString());
+                boolean foundErrors = false;
+                for (int i = 0; s.toString().length() > 0 && i < passwordValidation.length; i++) {
+                    if (passwordValidation[i] && !foundErrors) {
+                        foundErrors = true;
+                    }
+                    if (passwordValidation[i] && !displayingPasswordErrors[i]) {
+                        TextView userError = new TextView(LoginPage.this);
+                        userError.setText(PasswordValidationMessages[i]);
+                        userError.setTextColor(Color.parseColor("#FF0000"));
+                        userError.setId(passwordIds[i]);
+                        displayingPasswordErrors[i] = true;
+                        ((LinearLayout) findViewById(R.id.loginPageFormErrors)).addView(userError);
+                    } else {
+                        if (displayingPasswordErrors[i] && !passwordValidation[i]) {
+                            TextView foundView = findViewById(passwordIds[i]);
+                            ((ViewGroup) foundView.getParent()).removeView(foundView);
+                            displayingPasswordErrors[i] = false;
+                        }
+                    }
+                }
+                if (!foundErrors && s.toString().length() > 0) {
+                    TextView loginFormPasswordTitle = (TextView)findViewById(R.id.loginFormPasswordTitle);
+                    loginFormPasswordTitle.setTextColor(Color.parseColor("#4CAF50"));
+                    loginFormPasswordTitle.setText("Valid Password!");
+                    usernameValid = true;
+                } else if (foundErrors && s.toString().length() > 0) {
+                    TextView loginFormPasswordTitle = (TextView)findViewById(R.id.loginFormPasswordTitle);
+                    loginFormPasswordTitle.setTextColor(Color.parseColor("#FF0000"));
+                    loginFormPasswordTitle.setText("Invalid Password!");
+                } else {
+                    TextView loginFormPasswordTitle = (TextView)findViewById(R.id.loginFormPasswordTitle);
+                    if (loginFormPasswordTitle.getText().toString().equalsIgnoreCase("Valid Password!") || loginFormPasswordTitle.getText().toString().equalsIgnoreCase("Invalid Password!")) {
+                        loginFormPasswordTitle.setText("Password");
+                        loginFormPasswordTitle.setTextColor(Color.parseColor("#FF000000"));
+                    }
+                    if (!foundErrors && s.toString().length() == 0) {
+                        for (int i = 0; i < passwordIds.length; i++) {
+                            if (displayingPasswordErrors[i]) {
+                                TextView foundView = findViewById(passwordIds[i]);
+                                ((ViewGroup) foundView.getParent()).removeView(foundView);
+                                displayingPasswordErrors[i] = false;
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
         this.usernameInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -88,18 +153,18 @@ public final class LoginPage extends AppCompatActivity {
                     if (usernameValidation[i] && !foundErrors) {
                         foundErrors = true;
                     }
-                    if (usernameValidation[i] && !displaying[i]) {
+                    if (usernameValidation[i] && !displayingUsernameErrors[i]) {
                         TextView userError = new TextView(LoginPage.this);
                         userError.setText(UsernameValidationMessages[i]);
                         userError.setTextColor(Color.parseColor("#FF0000"));
-                        userError.setId(ids[i]);
-                        displaying[i] = true;
+                        userError.setId(usernameIds[i]);
+                        displayingUsernameErrors[i] = true;
                         ((LinearLayout) findViewById(R.id.loginPageFormErrors)).addView(userError);
                     } else {
-                        if (displaying[i] && !usernameValidation[i]) {
-                            TextView foundView = findViewById(ids[i]);
+                        if (displayingUsernameErrors[i] && !usernameValidation[i]) {
+                            TextView foundView = findViewById(usernameIds[i]);
                             ((ViewGroup) foundView.getParent()).removeView(foundView);
-                            displaying[i] = false;
+                            displayingUsernameErrors[i] = false;
                         }
                     }
                 }
@@ -107,6 +172,7 @@ public final class LoginPage extends AppCompatActivity {
                     TextView loginFormUsernameTitle = (TextView)findViewById(R.id.loginFormUsernameTitle);
                     loginFormUsernameTitle.setTextColor(Color.parseColor("#4CAF50"));
                     loginFormUsernameTitle.setText("Valid Username!");
+                    usernameValid = true;
                 } else if (foundErrors && s.toString().length() > 0) {
                     TextView loginFormUsernameTitle = (TextView)findViewById(R.id.loginFormUsernameTitle);
                     loginFormUsernameTitle.setTextColor(Color.parseColor("#FF0000"));
@@ -115,15 +181,15 @@ public final class LoginPage extends AppCompatActivity {
                     TextView loginFormUsernameTitle = (TextView)findViewById(R.id.loginFormUsernameTitle);
                     if (loginFormUsernameTitle.getText().toString().equalsIgnoreCase("Valid Username!") || loginFormUsernameTitle.getText().toString().equalsIgnoreCase("Invalid Username!")) {
                         loginFormUsernameTitle.setText("Username");
-                        loginFormUsernameTitle.setTextColor(R.color.black);
+                        loginFormUsernameTitle.setTextColor(Color.parseColor("#FF000000"));
                     }
                     if (!foundErrors && s.toString().length() == 0) {
                         System.out.println("In if");
-                        for (int i = 0; i < ids.length; i++) {
-                            if (displaying[i]) {
-                                TextView foundView = findViewById(ids[i]);
+                        for (int i = 0; i < usernameIds.length; i++) {
+                            if (displayingUsernameErrors[i]) {
+                                TextView foundView = findViewById(usernameIds[i]);
                                 ((ViewGroup) foundView.getParent()).removeView(foundView);
-                                displaying[i] = false;
+                                displayingUsernameErrors[i] = false;
                             }
                         }
                     }
