@@ -26,6 +26,7 @@ public final class PostsFirestoreManager extends FirestoreManager {
      */
     public PostsFirestoreManager(FirebaseFirestore client) {
         super(client);
+        super.setCollection("posts");
     }
 
     /**

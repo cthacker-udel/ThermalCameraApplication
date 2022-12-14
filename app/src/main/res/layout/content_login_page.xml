@@ -5,19 +5,6 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:text="@string/loginPageTitle"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/black"
-        />
-
     <LinearLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -38,12 +25,14 @@
             android:textSize="15sp"
             android:textStyle="italic"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:id="@+id/loginFormUsernameTitle"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/loginUsernameHint" android:id="@+id/loginPageUsernameInput" />
+            android:hint="@string/loginUsernameHint" android:id="@+id/loginPageUsernameInput"
+            android:height="48dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -64,6 +53,7 @@
                 android:inputType="textPassword"
                 android:hint="@string/loginPasswordHint"
                 android:id="@+id/loginPagePasswordInput"
+                android:height="48dp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -93,5 +83,16 @@
                 android:id="@+id/loginPageSignUpButton"
                 />
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/loginPageFormErrors"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        >
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

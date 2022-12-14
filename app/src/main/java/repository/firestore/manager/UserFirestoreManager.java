@@ -44,6 +44,7 @@ public final class UserFirestoreManager extends FirestoreManager {
      */
     public UserFirestoreManager(FirebaseFirestore client) {
         super(client);
+        super.setCollection("users");
     }
 
     public User findUser(String username) {
@@ -54,6 +55,10 @@ public final class UserFirestoreManager extends FirestoreManager {
     public boolean deleteUser(String username) {
         super.set(UserFirestoreDbContract.USERNAME_ID, username);
         return super.delete();
+    }
+
+    public boolean doesUserExist(String username) {
+        return this.findUser(username) != null;
     }
 
     public boolean updateUser(String username, String field, String value) {
