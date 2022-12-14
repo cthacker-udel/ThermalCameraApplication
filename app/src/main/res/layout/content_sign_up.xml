@@ -34,7 +34,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/requiredField"
                     android:textColor="@color/red"
-                    android:layout_marginEnd="7dp"
+                    android:layout_marginEnd="4dp"
                     android:textSize="20sp"
                     />
                 <TextView
@@ -125,5 +125,77 @@
                 android:inputType="phone"
                 />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/requiredField"
+                    android:textColor="@color/red"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="20sp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signUpFormPasswordTitle"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/signUpFormPasswordHint"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/requiredField"
+                    android:textColor="@color/red"
+                    android:layout_marginEnd="4dp"
+                    android:textSize="20sp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signUpConfirmPasswordTitle"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/signUpConfirmPasswordHint"
+                />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signUpButton"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,4 +41,9 @@
     <string name="signUpEmailTitle">Email</string>
     <string name="signUpPhoneNumberTitle">Phone Number</string>
     <string name="signUpPhoneNumberHint"><font size="15">Enter Phone Number</font></string>
+    <string name="signUpFormPasswordHint"><font size="15">Enter Password</font></string>
+    <string name="signUpFormPasswordTitle">Password</string>
+    <string name="signUpConfirmPasswordHint"><font size="15">Confirm Password</font></string>
+    <string name="signUpConfirmPasswordTitle">Confirm Password</string>
+    <string name="signUpButton">Sign Up</string>
 </resources>
