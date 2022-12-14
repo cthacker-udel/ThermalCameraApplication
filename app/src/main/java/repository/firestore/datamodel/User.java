@@ -1,8 +1,11 @@
 package repository.firestore.datamodel;
 
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Date;
+
+import repository.firestore.contracts.UserFirestoreDbContract;
 
 public class User {
 
@@ -11,8 +14,10 @@ public class User {
 
     private String username;
     private String password;
+    private String passwordSalt;
+    private Integer passwordIterations;
 
-    private String doesHaveProfilePicture;
+    private boolean doesHaveProfilePicture;
     private String profilePictureUrl;
 
     private String firstName;
@@ -27,6 +32,18 @@ public class User {
         this.username = username;
         this.password = password;
         this.profilePictureUrl = profilePictureUrl;
+    }
+    public User(DocumentSnapshot document) {
+        this.userId = document.get(UserFirestoreDbContract.DOCUMENT_ID, String.class);
+        this.username = document.get(UserFirestoreDbContract.USERNAME_ID, String.class);
+        this.doesHaveProfilePicture = Boolean.TRUE.equals(document.get(UserFirestoreDbContract.FIELD_DOES_HAVE_PROFILE_PICTURE, Boolean.class));
+        this.profilePictureUrl = document.get(UserFirestoreDbContract.FIELD_PROFILE_PICTURE_URL, String.class);
+        this.firstName = document.get(UserFirestoreDbContract.FIELD_FIRST_NAME, String.class);
+        this.lastName = document.get(UserFirestoreDbContract.FIELD_LAST_NAME, String.class);
+        this.email = document.get(UserFirestoreDbContract.FIELD_EMAIL, String.class);
+        this.phoneNumber = document.get(UserFirestoreDbContract.FIELD_PHONE_NUMBER, String.class);
+        this.passwordIterations = document.get(UserFirestoreDbContract.FIELD_PASSWORD_ITERATIONS, Integer.class);
+        this.passwordSalt = document.get(UserFirestoreDbContract.FIELD_PASSWORD_SALT, String.class);
     }
 
     public String getUserId() {
@@ -53,11 +70,11 @@ public class User {
         this.password = password;
     }
 
-    public String getDoesHaveProfilePicture() {
+    public boolean getDoesHaveProfilePicture() {
         return doesHaveProfilePicture;
     }
 
-    public void setDoesHaveProfilePicture(String doesHaveProfilePicture) {
+    public void setDoesHaveProfilePicture(boolean doesHaveProfilePicture) {
         this.doesHaveProfilePicture = doesHaveProfilePicture;
     }
 
@@ -107,5 +124,25 @@ public class User {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    public Integer getPasswordIterations() {
+        return passwordIterations;
+    }
+
+    public void setPasswordIterations(Integer passwordIterations) {
+        this.passwordIterations = passwordIterations;
+    }
+
+    public boolean isDoesHaveProfilePicture() {
+        return doesHaveProfilePicture;
     }
 }
