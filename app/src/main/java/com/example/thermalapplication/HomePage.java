@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -35,6 +36,7 @@ public class HomePage extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityHomePageBinding binding;
+    private ConstraintLayout layout;
     FirebaseFirestore db;
     PostsFirestoreManager postsFirestoreManager;
     ImageView userSettingsIcon;
@@ -42,11 +44,13 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
+        this.layout = (ConstraintLayout)findViewById(R.id.homePageInclude);
         this.userSettingsIcon = findViewById(R.id.userSettingsIcon);
         this.db = FirebaseFirestore.getInstance();
         this.postsFirestoreManager = new PostsFirestoreManager(this.db);
         Post[] posts = this.postsFirestoreManager.fetchAllPosts();
-        ScrollView homepageScrollView = (ScrollView) findViewById(R.id.homePageScrollView);
+        ScrollView homepageScrollView = (ScrollView) this.layout.findViewById(R.id.homePageScrollView);
         // Streams all posts and adds each one
         if (posts.length == 0) {
             TextView noPostsTextView = new TextView(this);

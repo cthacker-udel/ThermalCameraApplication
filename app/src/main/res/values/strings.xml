@@ -20,4 +20,12 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_login_page">LoginPage</string>
+    <string name="loginPageTitle">Login</string>
+    <string name="loginPageUsernameFormTitle">Username</string>
+    <string name="loginUsernameHint">Enter username here</string>
+    <string name="loginPasswordHint">Enter password here</string>
+    <string name="loginPasswordFormTitle">Password</string>
+    <string name="loginPageLoginButton">Login</string>
+    <string name="loginPageSignUpButton">Sign Up</string>
 </resources>
