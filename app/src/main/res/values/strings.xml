@@ -23,9 +23,22 @@
     <string name="title_activity_login_page">LoginPage</string>
     <string name="loginPageTitle">Login</string>
     <string name="loginPageUsernameFormTitle">Username</string>
-    <string name="loginUsernameHint">Enter username here</string>
-    <string name="loginPasswordHint">Enter password here</string>
+    <string name="loginUsernameHint"><font size="15">Enter Username</font></string>
+    <string name="loginPasswordHint"><font size="15">Enter Password</font></string>
     <string name="loginPasswordFormTitle">Password</string>
     <string name="loginPageLoginButton">Login</string>
     <string name="loginPageSignUpButton">Sign Up</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="signUpUsernameTitle">Username</string>
+    <string name="signUpFormTitle"><u>Sign Up Form</u></string>
+    <string name="signUpFormUsernameHint"><font size="15">Enter Username</font></string>
+    <string name="signUpFormFirstName">First Name</string>
+    <string name="signUpFormFirstNameHint"><font size="15">Enter First Name</font></string>
+    <string name="requiredField">*</string>
+    <string name="signUpLastNameTitle">Last Name</string>
+    <string name="lastNameInputHint"><font size="15">Enter Last Name</font></string>
+    <string name="signUpEmailInputHint"><font size="15">Enter Email</font></string>
+    <string name="signUpEmailTitle">Email</string>
+    <string name="signUpPhoneNumberTitle">Phone Number</string>
+    <string name="signUpPhoneNumberHint"><font size="15">Enter Phone Number</font></string>
 </resources>
