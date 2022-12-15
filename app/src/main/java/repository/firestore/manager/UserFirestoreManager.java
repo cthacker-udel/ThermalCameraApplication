@@ -135,6 +135,16 @@ public final class UserFirestoreManager extends FirestoreManager {
         return addingUserStatus;
     }
 
+    public AddUserStatus addUserV2(final User user) {
+        AddUserStatus addingUserStatus = new AddUserStatus();
+        boolean alreadyExists = this.findUser(user.getUsername()) != null;
+        addingUserStatus.setAlreadyExists(alreadyExists);
+        if (!alreadyExists) {
+            addingUserStatus.setSuccess(super.add(user));
+        }
+        return addingUserStatus;
+    }
+
     public boolean validatePassword(final String username, final String hashedPassword) {
         super.set(UserFirestoreDbContract.USERNAME_ID, username);
         return Objects.requireNonNull(snapshot.get(UserFirestoreDbContract.FIELD_PASSWORD)).toString().equals(hashedPassword);
