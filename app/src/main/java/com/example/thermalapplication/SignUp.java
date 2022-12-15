@@ -20,10 +20,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.thermalapplication.databinding.ActivitySignUpBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 import helpers.RegularExpressions;
+import repository.firestore.datamodel.User;
+import repository.firestore.manager.FirestoreManager;
+import repository.firestore.manager.UserFirestoreManager;
 
 class FormState {
     private boolean usernameValid;
@@ -89,6 +93,7 @@ public class SignUp extends AppCompatActivity {
     private EditText phoneNumber;
     private MutableLiveData<FormState> formState;
     private Button signUpButton;
+    private UserFirestoreManager userFirestoreManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +109,7 @@ public class SignUp extends AppCompatActivity {
         this.signUpButton = findViewById(R.id.signUpButton);
         this.formState = new MutableLiveData<>();
         this.formState.setValue(new FormState());
+        this.userFirestoreManager = new UserFirestoreManager(FirebaseFirestore.getInstance());
 
         this.password.addTextChangedListener(new TextWatcher() {
             @Override
@@ -194,6 +200,14 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onChanged(FormState formState) {
                 signUpButton.setEnabled(formState.isFormValid());
+            }
+        });
+
+        this.signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User newUser = new User();
+                newUser.setPassword(password.getText().toString()).setUsername(username.getText().toString()).setEmail(email.getText().toString());
             }
         });
 

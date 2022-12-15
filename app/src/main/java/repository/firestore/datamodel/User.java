@@ -50,96 +50,108 @@ public class User {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public User setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public User setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public boolean getDoesHaveProfilePicture() {
         return doesHaveProfilePicture;
     }
 
-    public void setDoesHaveProfilePicture(boolean doesHaveProfilePicture) {
+    public User setDoesHaveProfilePicture(boolean doesHaveProfilePicture) {
         this.doesHaveProfilePicture = doesHaveProfilePicture;
+        return this;
     }
 
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
 
-    public void setProfilePictureUrl(String profilePictureUrl) {
+    public User setProfilePictureUrl(String profilePictureUrl) {
         this.profilePictureUrl = profilePictureUrl;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public User setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public User setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public Date getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    public User setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+        return this;
     }
 
     public String getPasswordSalt() {
         return passwordSalt;
     }
 
-    public void setPasswordSalt(String passwordSalt) {
+    public User setPasswordSalt(String passwordSalt) {
         this.passwordSalt = passwordSalt;
+        return this;
     }
 
     public Integer getPasswordIterations() {
         return passwordIterations;
     }
 
-    public void setPasswordIterations(Integer passwordIterations) {
+    public User setPasswordIterations(Integer passwordIterations) {
         this.passwordIterations = passwordIterations;
+        return this;
     }
 
     public boolean isDoesHaveProfilePicture() {
