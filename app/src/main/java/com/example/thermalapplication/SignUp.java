@@ -210,9 +210,5 @@ public class SignUp extends AppCompatActivity {
                 newUser.setPassword(password.getText().toString()).setUsername(username.getText().toString()).setEmail(email.getText().toString());
             }
         });
-
-
-
-
     }
 }
