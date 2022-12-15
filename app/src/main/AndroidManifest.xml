@@ -12,6 +12,33 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThermalApplication">
         <activity
+            android:name=".DisplayPost"
+            android:exported="false"
+            android:label="@string/title_activity_display_post"
+            android:theme="@style/Theme.ThermalApplication.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".CreatePostPage"
+            android:exported="false"
+            android:label="@string/title_activity_create_post_page"
+            android:theme="@style/Theme.ThermalApplication.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".CameraPage"
+            android:exported="false"
+            android:label="@string/title_activity_camera_page"
+            android:theme="@style/Theme.ThermalApplication.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SignUp"
             android:exported="false"
             android:label="@string/title_activity_sign_up"

@@ -46,4 +46,7 @@
     <string name="signUpConfirmPasswordHint"><font size="15">Confirm Password</font></string>
     <string name="signUpConfirmPasswordTitle">Confirm Password</string>
     <string name="signUpButton">Sign Up</string>
+    <string name="title_activity_camera_page">CameraPage</string>
+    <string name="title_activity_create_post_page">CreatePostPage</string>
+    <string name="title_activity_display_post">DisplayPost</string>
 </resources>
