@@ -50,6 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/signUpFormUsernameHint"
+                android:id="@+id/signUpUsernameInput"
                 />
         </LinearLayout>
         <LinearLayout
@@ -156,6 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/signUpFormPasswordHint"
+                android:id="@+id/signUpPasswordInput"
+                android:inputType="textPassword"
                 />
         </LinearLayout>
         <LinearLayout
@@ -188,6 +191,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/signUpConfirmPasswordHint"
+                android:id="@+id/signUpConfirmPasswordInput"
+                android:inputType="textPassword"
                 />
         </LinearLayout>
 
@@ -197,6 +202,7 @@
             android:text="@string/signUpButton"
             android:layout_marginTop="30dp"
             android:layout_gravity="center"
+            android:id="@+id/signUpButton"
             />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

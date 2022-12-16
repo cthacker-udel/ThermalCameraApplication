@@ -1,6 +1,7 @@
 package com.example.thermalapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -18,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Objects;
 
 import helpers.RegularExpressions;
 import repository.firestore.manager.UserFirestoreManager;
@@ -246,6 +245,13 @@ public final class LoginPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // validate login
+            }
+        });
+
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginPage.this, SignUp.class));
             }
         });
 

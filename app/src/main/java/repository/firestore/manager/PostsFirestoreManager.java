@@ -2,10 +2,14 @@ package repository.firestore.manager;
 
 import android.os.Build;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -66,15 +70,10 @@ public final class PostsFirestoreManager extends FirestoreManager {
         this.client.collection(PostFirestoreDbContract.COLLECTION_NAME).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    queryDocumentSnapshots.getDocuments().forEach(e -> posts.add(convertSnapshotToPost(e)));
-                }
+                queryDocumentSnapshots.getDocuments().forEach(e -> posts.add(convertSnapshotToPost(e)));
             }
         });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return posts.toArray(Post[]::new);
-        }
-        return (Post[]) posts.toArray();
+        return posts.toArray(Post[]::new);
     }
 
     /**
@@ -83,10 +82,9 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param postImageUrl - The post image url that is required when creating a post
      * @param author - The author of the post
      * @param content - The content of the post
-     * @return Whether or not the addition of the post was successful
      */
-    public boolean addPost(String postImageUrl, String author, String content) {
-        return super.add(new Post(author, postImageUrl).setContent(content), "Added a post successfully!", "Failed to add a post");
+    public void addPost(String postImageUrl, String author, String content, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
+        super.add(new Post(author, postImageUrl).setContent(content), onSuccessListener, onFailureListener);
     }
 
     /**
@@ -95,11 +93,10 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param field - The field we are updating
      * @param documentId - The id of the document to update
      * @param content - The content we are pushing to the post
-     * @return Whether or not the edit was successful
      */
-    public boolean editPost(String field, String documentId, Post content) {
+    public void editPost(String field, String documentId, Post content, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
         super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
-        return super.update(field, content);
+        super.update(field, content, onSuccessListener, onFailureListener);
     }
 
     /**
@@ -107,11 +104,10 @@ public final class PostsFirestoreManager extends FirestoreManager {
      *
      * @param documentId - The id of the document to update
      * @param upvoteFunction - The function we will apply to the upvote count when we encounter it in the database
-     * @return Whether or not the edit was successful
      */
-    public boolean editUpvote(String documentId, Function<Integer, Integer> upvoteFunction) {
+    public void editUpvote(String documentId, Function<Integer, Integer> upvoteFunction, final OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
         super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
-        return super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_UPVOTES, Integer.class, upvoteFunction);
+        super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_UPVOTES, Integer.class, upvoteFunction, onSuccessListener, onFailureListener);
     }
 
     /**
@@ -119,11 +115,10 @@ public final class PostsFirestoreManager extends FirestoreManager {
      *
      * @param documentId - The id of the document to update
      * @param commentsFunction - The function we will apply to the comments value when we find it within the database
-     * @return Whether or not the edit was successful
      */
-    public boolean editNumberComments(String documentId, Function<Integer, Integer> commentsFunction) {
+    public void editNumberComments(String documentId, Function<Integer, Integer> commentsFunction, final OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
         super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
-        return super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_COMMENTS, Integer.class, commentsFunction);
+        super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_COMMENTS, Integer.class, commentsFunction, onSuccessListener, onFailureListener);
     }
 
     /**
@@ -131,21 +126,19 @@ public final class PostsFirestoreManager extends FirestoreManager {
      *
      * @param documentId - The ID of the entry in the database
      * @param updateFunction - The function that will be invoked upon the # of trophies when the document is found in the database
-     * @return Whether or not the edit was successful
      */
-    public boolean editNumberTrophies(String documentId, Function<Integer, Integer> updateFunction) {
+    public void editNumberTrophies(String documentId, Function<Integer, Integer> updateFunction, OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
         super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
-        return super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_TROPHIES, Integer.class, updateFunction);
+        super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_TROPHIES, Integer.class, updateFunction, onSuccessListener, onFailureListener);
     }
 
     /**
      * Adds a post url to an post
      *
      * @param url - The post image url
-     * @return Whether or not the addition of the post url was successful
      */
-    public boolean addPostImageUrl(String url) {
-        return super.update(PostFirestoreDbContract.FIELD_POST_IMAGE_URL, url);
+    public void addPostImageUrl(String url, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
+        super.update(PostFirestoreDbContract.FIELD_POST_IMAGE_URL, url, onSuccessListener, onFailureListener);
     }
 
 

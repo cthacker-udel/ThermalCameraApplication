@@ -1,5 +1,10 @@
 package repository.firestore.manager;
 
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.nio.charset.StandardCharsets;
@@ -13,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import helpers.ListenerFuncGenerator;
 import repository.firestore.contracts.UserFirestoreDbContract;
 import repository.firestore.datamodel.User;
 
@@ -108,21 +114,21 @@ public final class UserFirestoreManager extends FirestoreManager {
         return super.snapshot != null ? new User(super.snapshot) : null;
     }
 
-    public boolean deleteUser(String username) {
+    public void deleteUser(String username, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
         super.set(UserFirestoreDbContract.USERNAME_ID, username);
-        return super.delete();
+        super.delete(onSuccessListener, onFailureListener);
     }
 
     public boolean doesUserExist(String username) {
         return this.findUser(username) != null;
     }
 
-    public boolean updateUser(String username, String field, String value) {
+    public void updateUser(String username, String field, String value, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
         super.set(UserFirestoreDbContract.USERNAME_ID, username);
-        return super.update(field, value);
+        super.update(field, value, onSuccessListener, onFailureListener);
     }
 
-    public AddUserStatus addUser(final String username, final String password) {
+    public AddUserStatus addUser(final String username, final String password, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
         AddUserStatus addingUserStatus = new AddUserStatus();
         boolean alreadyExists = this.findUser(username) != null;
         addingUserStatus.setAlreadyExists(alreadyExists);
@@ -130,7 +136,19 @@ public final class UserFirestoreManager extends FirestoreManager {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setPassword(password);
-            addingUserStatus.setSuccess(super.add(newUser));
+            super.add(newUser, onSuccessListener, onFailureListener);
+            addingUserStatus.setSuccess(true);
+        }
+        return addingUserStatus;
+    }
+
+    public AddUserStatus addUserV2(final User user, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
+        AddUserStatus addingUserStatus = new AddUserStatus();
+        boolean alreadyExists = this.findUser(user.getUsername()) != null;
+        addingUserStatus.setAlreadyExists(alreadyExists);
+        if (!alreadyExists) {
+            super.add(user, onSuccessListener, onFailureListener);
+            addingUserStatus.setSuccess(true);
         }
         return addingUserStatus;
     }

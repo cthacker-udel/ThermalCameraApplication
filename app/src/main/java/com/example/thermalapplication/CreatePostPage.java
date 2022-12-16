@@ -115,6 +115,9 @@ public class CreatePostPage extends AppCompatActivity {
         currPost.put("photo",imagePath);
         document.set(currPost);
         
+
+        setContentView(R.layout.activity_create_post_page);
+
     }
 
     public void selectImage()
