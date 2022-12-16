@@ -85,7 +85,7 @@ class FormState {
 
 public class SignUp extends AppCompatActivity {
 
-    public static String[] UsernameValidationMessages = new String[] { "\u2022 Username must be more then 7 characters",  "\u2022 Username must contain at least 1 digit", "\u2022 Username must contain at least one symbol", "\u2022 Username must contain at least one uppercase character", "\u2022 Username must contain at least one lowercase character",};
+    public static String[] UsernameValidationMessages = new String[] { "\u2022 Username must be more then 7 characters" };
     public static String[] PasswordValidationMessages = new String[] { "\u2022 Password must be at least 7 characters", "\u2022 Password must contain at least 1 digit", "\u2022 Password must contain at least one symbol", "\u2022 Password must contain at least one uppercase character", "\u2022 Password must contain at least one lowercase character",};
     public static String[] ConfirmPasswordValidationMessages = new String[] { "\u2022 Passwords must match"};
 
@@ -213,7 +213,16 @@ public class SignUp extends AppCompatActivity {
             public void onClick(View v) {
                 System.out.println("In onclick");
                 User newUser = new User();
-                newUser.setPassword(password.getText().toString()).setUsername(username.getText().toString()).setEmail(email.getText().toString());
+                UserFirestoreManager.PasswordGenerationSpecifications passwordGenerationSpecifications = userFirestoreManager.generatePassword(username.getText().toString(), password.getText().toString());
+                newUser.setPassword(passwordGenerationSpecifications.getHash())
+                            .setUsername(username.getText().toString())
+                                .setEmail(email.getText().toString())
+                                    .setPasswordIterations(passwordGenerationSpecifications.getIterations())
+                                        .setPasswordSalt(passwordGenerationSpecifications.getSalt())
+                                            .setFirstName(firstName.getText().toString())
+                                                .setLastName(lastName.getText().toString())
+                                                        .setEmail(email.getText().toString())
+                                                                .setPhoneNumber(phoneNumber.getText().toString());
                 userFirestoreManager.addUserV2(newUser, ListenerFuncGenerator.generateOnSuccessListener(e -> {
                     Toast.makeText(SignUp.this, "Successfully added a User", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(SignUp.this, LoginPage.class));

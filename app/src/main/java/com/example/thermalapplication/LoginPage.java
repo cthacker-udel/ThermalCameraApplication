@@ -17,8 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import helpers.RegularExpressions;
 import repository.firestore.manager.UserFirestoreManager;
@@ -244,7 +248,16 @@ public final class LoginPage extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // validate login
+                try {
+                    boolean isValidCredentials = userFirestoreManager.validateUser(usernameInput.getText().toString(), passwordInput.getText().toString());
+                    if (isValidCredentials) {
+                        startActivity(new Intent(LoginPage.this, HomePage.class));
+                    } else {
+                        Toast.makeText(LoginPage.this, "Failed to login", Toast.LENGTH_LONG).show();
+                    }
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

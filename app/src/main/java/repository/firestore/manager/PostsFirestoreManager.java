@@ -95,7 +95,6 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param content - The content we are pushing to the post
      */
     public void editPost(String field, String documentId, Post content, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
-        super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
         super.update(field, content, onSuccessListener, onFailureListener);
     }
 
@@ -105,8 +104,7 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param documentId - The id of the document to update
      * @param upvoteFunction - The function we will apply to the upvote count when we encounter it in the database
      */
-    public void editUpvote(String documentId, Function<Integer, Integer> upvoteFunction, final OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
-        super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
+    public void editUpvote(String documentId, Function<Integer, Integer> upvoteFunction, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
         super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_UPVOTES, Integer.class, upvoteFunction, onSuccessListener, onFailureListener);
     }
 
@@ -117,7 +115,6 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param commentsFunction - The function we will apply to the comments value when we find it within the database
      */
     public void editNumberComments(String documentId, Function<Integer, Integer> commentsFunction, final OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
-        super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
         super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_COMMENTS, Integer.class, commentsFunction, onSuccessListener, onFailureListener);
     }
 
@@ -128,7 +125,6 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param updateFunction - The function that will be invoked upon the # of trophies when the document is found in the database
      */
     public void editNumberTrophies(String documentId, Function<Integer, Integer> updateFunction, OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
-        super.set(PostFirestoreDbContract.DOCUMENT_ID, documentId);
         super.updateFunction(PostFirestoreDbContract.FIELD_NUMBER_TROPHIES, Integer.class, updateFunction, onSuccessListener, onFailureListener);
     }
 
@@ -141,5 +137,12 @@ public final class PostsFirestoreManager extends FirestoreManager {
         super.update(PostFirestoreDbContract.FIELD_POST_IMAGE_URL, url, onSuccessListener, onFailureListener);
     }
 
-
+    /**
+     * Retrieves an instance of the class
+     *
+     * @return The instance of the class
+     */
+    public PostsFirestoreManager getInstance() {
+        return this;
+    }
 }

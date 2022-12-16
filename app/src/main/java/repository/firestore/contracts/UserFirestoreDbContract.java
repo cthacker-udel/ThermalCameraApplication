@@ -9,14 +9,14 @@ public final class UserFirestoreDbContract {
     public static final String USERNAME_ID = "username_id";
     public static final String FIELD_USERNAME = "username";
     public static final String FIELD_PASSWORD = "password";
-    public static final String FIELD_DOES_HAVE_PROFILE_PICTURE = "does_have_profile_picture";
-    public static final String FIELD_PROFILE_PICTURE_URL = "profile_picture_url";
-    public static final String FIELD_FIRST_NAME = "first_name";
-    public static final String FIELD_LAST_NAME = "last_name";
+    public static final String FIELD_DOES_HAVE_PROFILE_PICTURE = "doesHaveProfilePicture";
+    public static final String FIELD_PROFILE_PICTURE_URL = "profilePictureUrl";
+    public static final String FIELD_FIRST_NAME = "firstName";
+    public static final String FIELD_LAST_NAME = "lastName";
     public static final String FIELD_EMAIL = "email";
-    public static final String FIELD_PHONE_NUMBER = "phone_number";
-    public static final String FIELD_LAST_LOGIN = "last_login";
-    public static final String FIELD_PASSWORD_ITERATIONS = "password_iterations";
-    public static final String FIELD_PASSWORD_SALT = "password_salt";
+    public static final String FIELD_PHONE_NUMBER = "phoneNumber";
+    public static final String FIELD_LAST_LOGIN = "lastLogin";
+    public static final String FIELD_PASSWORD_ITERATIONS = "passwordIterations";
+    public static final String FIELD_PASSWORD_SALT = "passwordSalt";
 
 }

@@ -65,17 +65,18 @@ public class FirestoreManager implements iFirestoreManager {
     }
 
     @Override
-    public FirestoreManager set(String field, String documentId) {
+    public FirestoreManager set(String field, String documentId, OnSuccessListener<QuerySnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         Query docQuery = this.collection.whereEqualTo(field, documentId);
         Task<QuerySnapshot> docQuerySnapshot = docQuery.get();
-        docQuerySnapshot.addOnSuccessListener(queryDocumentSnapshots -> {
-           if (queryDocumentSnapshots.isEmpty()) {
-               this.snapshot = null;
-           } else {
-               this.snapshot = queryDocumentSnapshots.getDocuments().get(0);
-               this.reference = this.snapshot.getReference();
-           }
-        });
+        docQuerySnapshot.addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+//        docQuerySnapshot.addOnSuccessListener(queryDocumentSnapshots -> {
+//           if (queryDocumentSnapshots.isEmpty()) {
+//               this.snapshot = null;
+//           } else {
+//               this.snapshot = queryDocumentSnapshots.getDocuments().get(0);
+//               this.reference = this.snapshot.getReference();
+//           }
+//        }).addOnFailureListener(onFailureListener);
         return this;
     }
 

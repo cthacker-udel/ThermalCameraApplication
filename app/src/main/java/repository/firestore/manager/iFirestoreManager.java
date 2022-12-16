@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.function.Function;
 
@@ -28,7 +29,7 @@ public interface iFirestoreManager {
      * @param documentId - The id of the document
      * @return The current document
      */
-    FirestoreManager set(String field, String documentId);
+    FirestoreManager set(String field, String documentId, OnSuccessListener<QuerySnapshot> onSuccessListener, OnFailureListener onFailureListener);
 
     /**
      * Queries the current document stored within the instance of the FirestoreManager

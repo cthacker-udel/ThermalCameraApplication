@@ -1,18 +1,17 @@
 package repository.firestore.manager;
 
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Date;
 import java.util.Objects;
-import java.util.Random;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -22,83 +21,83 @@ import helpers.ListenerFuncGenerator;
 import repository.firestore.contracts.UserFirestoreDbContract;
 import repository.firestore.datamodel.User;
 
-class AddUserStatus {
-    public boolean alreadyExists = false;
-    public boolean success = false;
-
-    public AddUserStatus() {
-        this.alreadyExists = false;
-        this.success = false;
-    }
-
-    public AddUserStatus(boolean alreadyExists, boolean success) {
-        this.alreadyExists = alreadyExists;
-        this.success = success;
-    }
-
-    public boolean isAlreadyExists() {
-        return alreadyExists;
-    }
-
-    public void setAlreadyExists(boolean alreadyExists) {
-        this.alreadyExists = alreadyExists;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-}
-
-class PasswordGenerationSpecifications {
-    private String hash;
-    private Integer iterations;
-    private String salt;
-
-    public PasswordGenerationSpecifications() {
-        this.hash = null;
-        this.iterations = null;
-        this.salt = null;
-    }
-
-    public PasswordGenerationSpecifications(String hash, Integer iterations, String salt) {
-        this.hash = hash;
-        this.iterations = iterations;
-        this.salt = salt;
-    }
-
-    public String getHash() {
-        return hash;
-    }
-
-    public PasswordGenerationSpecifications setHash(String hash) {
-        this.hash = hash;
-        return this;
-    }
-
-    public Integer getIterations() {
-        return iterations;
-    }
-
-    public PasswordGenerationSpecifications setIterations(Integer iterations) {
-        this.iterations = iterations;
-        return this;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public PasswordGenerationSpecifications setSalt(String salt) {
-        this.salt = salt;
-        return this;
-    }
-}
-
 public final class UserFirestoreManager extends FirestoreManager {
+    public DocumentSnapshot foundUserSnapshot = null;
+    public User foundUser = null;
+    public static class PasswordGenerationSpecifications {
+        private String hash;
+        private Integer iterations;
+        private String salt;
+
+        public PasswordGenerationSpecifications() {
+            this.hash = null;
+            this.iterations = null;
+            this.salt = null;
+        }
+
+        public PasswordGenerationSpecifications(String hash, Integer iterations, String salt) {
+            this.hash = hash;
+            this.iterations = iterations;
+            this.salt = salt;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
+        public PasswordGenerationSpecifications setHash(String hash) {
+            this.hash = hash;
+            return this;
+        }
+
+        public Integer getIterations() {
+            return iterations;
+        }
+
+        public PasswordGenerationSpecifications setIterations(Integer iterations) {
+            this.iterations = iterations;
+            return this;
+        }
+
+        public String getSalt() {
+            return salt;
+        }
+
+        public PasswordGenerationSpecifications setSalt(String salt) {
+            this.salt = salt;
+            return this;
+        }
+    }
+    public static class AddUserStatus {
+        public boolean alreadyExists = false;
+        public boolean success = false;
+
+        public AddUserStatus() {
+            this.alreadyExists = false;
+            this.success = false;
+        }
+
+        public AddUserStatus(boolean alreadyExists, boolean success) {
+            this.alreadyExists = alreadyExists;
+            this.success = success;
+        }
+
+        public boolean isAlreadyExists() {
+            return alreadyExists;
+        }
+
+        public void setAlreadyExists(boolean alreadyExists) {
+            this.alreadyExists = alreadyExists;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+    }
     /**
      * Initializes the client with the FirebaseFirestore client
      *
@@ -109,13 +108,41 @@ public final class UserFirestoreManager extends FirestoreManager {
         super.setCollection("users");
     }
 
+    public User convertDocumentSnapshot(DocumentSnapshot foundUser) {
+        User newUser = new User();
+        newUser.setUsername(foundUser.get(UserFirestoreDbContract.FIELD_USERNAME, String.class))
+                .setEmail(foundUser.get(UserFirestoreDbContract.FIELD_EMAIL, String.class))
+                .setPhoneNumber(foundUser.get(UserFirestoreDbContract.FIELD_PHONE_NUMBER, String.class))
+                .setFirstName(foundUser.get(UserFirestoreDbContract.FIELD_FIRST_NAME, String.class))
+                .setLastName(foundUser.get(UserFirestoreDbContract.FIELD_LAST_NAME, String.class))
+                .setPasswordSalt(foundUser.get(UserFirestoreDbContract.FIELD_PASSWORD_SALT, String.class))
+                .setPasswordIterations(foundUser.get(UserFirestoreDbContract.FIELD_PASSWORD_ITERATIONS, Integer.class))
+                .setPassword(foundUser.get(UserFirestoreDbContract.FIELD_PASSWORD, String.class))
+                .setDoesHaveProfilePicture(Boolean.TRUE.equals(foundUser.get(UserFirestoreDbContract.FIELD_DOES_HAVE_PROFILE_PICTURE, Boolean.class)))
+                .setLastLogin(foundUser.get(UserFirestoreDbContract.FIELD_LAST_LOGIN, Date.class));
+        return newUser;
+    }
+
     public User findUser(String username) {
-        super.set(UserFirestoreDbContract.USERNAME_ID, username);
-        return super.snapshot != null ? new User(super.snapshot) : null;
+        super.set(UserFirestoreDbContract.FIELD_USERNAME, username, ListenerFuncGenerator.generateOnSuccessListener(e -> {
+            this.foundUserSnapshot = e.getDocuments().size() > 0 ? e.getDocuments().get(0) : null;
+            this.foundUser = this.foundUserSnapshot != null ? convertDocumentSnapshot(this.foundUserSnapshot) : null;
+            return null;
+        }), ListenerFuncGenerator.generateFailureListener(e -> {
+            e.printStackTrace();
+            return null;
+        }));
+        return this.foundUser;
     }
 
     public void deleteUser(String username, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
-        super.set(UserFirestoreDbContract.USERNAME_ID, username);
+        super.set(UserFirestoreDbContract.FIELD_USERNAME, username, ListenerFuncGenerator.generateOnSuccessListener(e -> {
+            this.foundUserSnapshot = e.getDocuments().get(0);
+            return null;
+        }), ListenerFuncGenerator.generateFailureListener(e -> {
+            e.printStackTrace();
+            return null;
+        }));
         super.delete(onSuccessListener, onFailureListener);
     }
 
@@ -124,7 +151,13 @@ public final class UserFirestoreManager extends FirestoreManager {
     }
 
     public void updateUser(String username, String field, String value, final OnSuccessListener<? super Void> onSuccessListener, final OnFailureListener onFailureListener) {
-        super.set(UserFirestoreDbContract.USERNAME_ID, username);
+        super.set(UserFirestoreDbContract.FIELD_USERNAME, username, ListenerFuncGenerator.generateOnSuccessListener(e -> {
+            this.foundUserSnapshot = e.getDocuments().get(0);
+            return null;
+        }), ListenerFuncGenerator.generateFailureListener(e -> {
+            e.printStackTrace();
+            return null;
+        }));
         super.update(field, value, onSuccessListener, onFailureListener);
     }
 
@@ -154,7 +187,13 @@ public final class UserFirestoreManager extends FirestoreManager {
     }
 
     public boolean validatePassword(final String username, final String hashedPassword) {
-        super.set(UserFirestoreDbContract.USERNAME_ID, username);
+        super.set(UserFirestoreDbContract.FIELD_USERNAME, username, ListenerFuncGenerator.generateOnSuccessListener(e -> {
+            this.foundUserSnapshot = e.getDocuments().get(0);
+            return null;
+        }), ListenerFuncGenerator.generateFailureListener(e -> {
+            e.printStackTrace();
+            return null;
+        }));
         return Objects.requireNonNull(snapshot.get(UserFirestoreDbContract.FIELD_PASSWORD)).toString().equals(hashedPassword);
     }
 
@@ -198,14 +237,16 @@ public final class UserFirestoreManager extends FirestoreManager {
         return new String(result, StandardCharsets.UTF_8);
     }
 
-    public PasswordGenerationSpecifications generatePassword(String username, String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public PasswordGenerationSpecifications generatePassword(String username, String password)  {
         SecureRandom randomGenerator = new SecureRandom();
-        byte[] byteArray = new byte[128];
-        randomGenerator.nextBytes(byteArray);
-        // formulated bytes
-        String salt = new String(byteArray, StandardCharsets.UTF_8);
+        String saltCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>,./?;:[]{}|()&*%^#$!@~`";
+        int saltLength = saltCharacters.length();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 128; i++) {
+            sb.append(saltCharacters.charAt(randomGenerator.nextInt(saltLength)));
+        }
         // formulated salt
-        int randomIterations = randomGenerator.nextInt();
+        int randomIterations = randomGenerator.nextInt(501);
         // formulated # of iterations
         SecretKeyFactory pbkdf2Factory = null;
         // initializing factory to hash key
@@ -213,28 +254,37 @@ public final class UserFirestoreManager extends FirestoreManager {
             pbkdf2Factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
         } catch (NoSuchAlgorithmException exception) {
             exception.printStackTrace();
-            throw exception;
         }
 
         // generate key from combination of password, salt, and iterations
-        PBEKeySpec generatedKey = new PBEKeySpec(password.toCharArray(), salt.getBytes(), randomIterations, 128);
-        SecretKey key;
+        PBEKeySpec generatedKey = new PBEKeySpec(password.toCharArray(), sb.toString().getBytes(), randomIterations, 128);
+        SecretKey key = null;
         try {
             // hashing part
+            assert pbkdf2Factory != null;
             key = pbkdf2Factory.generateSecret(generatedKey);
-        } catch (InvalidKeySpecException exception) {
+        } catch (InvalidKeySpecException | NullPointerException exception) {
             exception.printStackTrace();
-            throw exception;
         }
 
         // get encoded key
+        assert key != null;
         byte[] result = key.getEncoded();
 
         // convert encoded key to string
         String resultantPassword = new String(result, StandardCharsets.UTF_8);
 
         PasswordGenerationSpecifications specifications = new PasswordGenerationSpecifications();
-        specifications.setHash(resultantPassword).setIterations(randomIterations).setSalt(salt);
+        specifications.setHash(resultantPassword).setIterations(randomIterations).setSalt(sb.toString());
         return specifications;
+    }
+
+    /**
+     * Retrieves an instance of the class
+     *
+     * @return The instance of the class
+     */
+    public UserFirestoreManager getInstance() {
+        return this;
     }
 }
