@@ -2,10 +2,14 @@ package repository.firestore.manager;
 
 import android.os.Build;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -85,8 +89,8 @@ public final class PostsFirestoreManager extends FirestoreManager {
      * @param content - The content of the post
      * @return Whether or not the addition of the post was successful
      */
-    public boolean addPost(String postImageUrl, String author, String content) {
-        return super.add(new Post(author, postImageUrl).setContent(content), "Added a post successfully!", "Failed to add a post");
+    public void addPost(String postImageUrl, String author, String content, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
+        super.add(new Post(author, postImageUrl).setContent(content), onSuccessListener, onFailureListener);
     }
 
     /**

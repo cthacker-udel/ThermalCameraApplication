@@ -73,10 +73,6 @@ public class User {
         return this;
     }
 
-    public boolean getDoesHaveProfilePicture() {
-        return doesHaveProfilePicture;
-    }
-
     public User setDoesHaveProfilePicture(boolean doesHaveProfilePicture) {
         this.doesHaveProfilePicture = doesHaveProfilePicture;
         return this;

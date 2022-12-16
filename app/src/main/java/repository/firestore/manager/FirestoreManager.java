@@ -2,8 +2,13 @@ package repository.firestore.manager;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -127,23 +132,10 @@ public class FirestoreManager implements iFirestoreManager {
     }
 
     @Override
-    public <I> boolean add(I value) {
-        if (this.snapshot == null || this.reference == null) {
-            return false;
+    public <I> void add(I value, OnSuccessListener<DocumentReference> successListener, OnFailureListener failureListener) {
+        if (this.snapshot != null || this.reference != null) {
+            return;
         }
-        Task<DocumentReference> result = this.collection.add(value);
-        return result.isSuccessful();
-    }
-
-    @Override
-    public <I> boolean add(I value, String successMessage, String successFailure) {
-        if (this.snapshot == null || this.reference == null) {
-            return false;
-        }
-        Task<DocumentReference> result = this.collection.add(value);
-        if (this.ctx != null) {
-            Toast.makeText(this.ctx, result.isSuccessful() ? successMessage : successFailure, Toast.LENGTH_SHORT).show();
-        }
-        return result.isSuccessful();
+        this.collection.add(value).addOnSuccessListener(successListener).addOnFailureListener(failureListener);
     }
 }

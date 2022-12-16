@@ -1,5 +1,10 @@
 package repository.firestore.manager;
 
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.nio.charset.StandardCharsets;
@@ -13,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import helpers.ListenerFuncGenerator;
 import repository.firestore.contracts.UserFirestoreDbContract;
 import repository.firestore.datamodel.User;
 
@@ -122,7 +128,7 @@ public final class UserFirestoreManager extends FirestoreManager {
         return super.update(field, value);
     }
 
-    public AddUserStatus addUser(final String username, final String password) {
+    public AddUserStatus addUser(final String username, final String password, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
         AddUserStatus addingUserStatus = new AddUserStatus();
         boolean alreadyExists = this.findUser(username) != null;
         addingUserStatus.setAlreadyExists(alreadyExists);
@@ -130,17 +136,20 @@ public final class UserFirestoreManager extends FirestoreManager {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setPassword(password);
-            addingUserStatus.setSuccess(super.add(newUser));
+            super.add(newUser, onSuccessListener, onFailureListener);
         }
         return addingUserStatus;
     }
 
-    public AddUserStatus addUserV2(final User user) {
+    public AddUserStatus addUserV2(final User user, final OnSuccessListener<DocumentReference> onSuccessListener, final OnFailureListener onFailureListener) {
         AddUserStatus addingUserStatus = new AddUserStatus();
         boolean alreadyExists = this.findUser(user.getUsername()) != null;
+        System.out.printf("Does user exist: %s\n", alreadyExists);
         addingUserStatus.setAlreadyExists(alreadyExists);
         if (!alreadyExists) {
-            addingUserStatus.setSuccess(super.add(user));
+            System.out.printf("Adding user\n");
+            super.add(user, onSuccessListener, onFailureListener);
+            addingUserStatus.setSuccess(true);
         }
         return addingUserStatus;
     }

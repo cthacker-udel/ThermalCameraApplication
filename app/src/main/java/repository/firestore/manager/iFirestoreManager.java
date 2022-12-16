@@ -2,6 +2,10 @@ package repository.firestore.manager;
 
 import android.content.Context;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.function.Function;
 
 /**
@@ -61,21 +65,11 @@ public interface iFirestoreManager {
      * Adds an entry to the database
      *
      * @param value - The value we are adding to the database
+     * @param onSuccessListener - The listener that fires when the operation was successful
+     * @param onFailureListener - The listener that fires when the operation was a failure
      * @param <I> - The type of value being added
-     * @return Whether or not the
      */
-    <I> boolean add(I value);
-
-    /**
-     * Adds an entry to the database, with the associated message being displayed to the application
-     *
-     * @param value - The value we are adding to the database
-     * @param toastMessageSuccess - The message we are displaying to the user when the entry is added successfully
-     * @param toastMessageFailure - The message we are displaying to the user when the entry is unsuccessfully added
-     * @param <I> - The type of value we are adding
-     * @return Whether the insertion was successful or not
-     */
-    <I> boolean add(I value, String toastMessageSuccess, String toastMessageFailure);
+    <I> void add(I value, OnSuccessListener<DocumentReference> onSuccessListener, OnFailureListener onFailureListener);
 
     /**
      * Deletes the current document instance within the FirestoreManager
