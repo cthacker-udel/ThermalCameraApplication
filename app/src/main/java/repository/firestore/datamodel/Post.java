@@ -2,7 +2,7 @@ package repository.firestore.datamodel;
 
 import com.google.firebase.firestore.DocumentId;
 
-public class Post {
+public abstract class Post {
 
     @DocumentId
     private String documentId;
@@ -96,4 +96,6 @@ public class Post {
         this.numberTrophies = numberTrophies;
         return this;
     }
+
+    public abstract void createPost();
 }
