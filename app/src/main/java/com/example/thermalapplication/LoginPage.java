@@ -248,16 +248,16 @@ public final class LoginPage extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    boolean isValidCredentials = userFirestoreManager.validateUser(usernameInput.getText().toString(), passwordInput.getText().toString());
-                    if (isValidCredentials) {
+                // try {
+//                    boolean isValidCredentials = userFirestoreManager.validateUser(usernameInput.getText().toString(), passwordInput.getText().toString());
+//                    if (isValidCredentials) {
                         startActivity(new Intent(LoginPage.this, HomePage.class));
-                    } else {
-                        Toast.makeText(LoginPage.this, "Failed to login", Toast.LENGTH_LONG).show();
-                    }
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    e.printStackTrace();
-                }
+//                    } else {
+//                        Toast.makeText(LoginPage.this, "Failed to login", Toast.LENGTH_LONG).show();
+//                    }
+//                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 

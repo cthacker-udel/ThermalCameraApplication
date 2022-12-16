@@ -1,5 +1,14 @@
+/*
+ * ******************************************************************
+ * @title FLIR THERMAL SDK
+ * @file FlirActivity.java
+ * @Author FLIR Systems AB
+ *
+ * @brief  Main UI of test application
+ *
+ * Copyright 2019:    FLIR Systems
+ * ******************************************************************/
 package com.example.thermalapplication;
-
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -30,13 +39,13 @@ import java.util.concurrent.LinkedBlockingQueue;
  * <p>
  * See the {@link CameraHandler} for how to preform discovery of a FLIR ONE camera, connecting to it and start streaming images
  * <p>
- * The MainActivity is primarily focused to "glue" different helper classes together and updating the UI components
+ * The FlirActivity is primarily focused to "glue" different helper classes together and updating the UI components
  * <p/>
  * Please note, this is <b>NOT</b> production quality code, error handling has been kept to a minimum to keep the code as clear and concise as possible
  */
-public class MainActivityFlir extends AppCompatActivity {
+public class FlirActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "FlirActivity";
 
     //Handles Android permission for eg Network
     private PermissionHandler permissionHandler;
@@ -65,7 +74,7 @@ public class MainActivityFlir extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_flir);
 
         ThermalLog.LogLevel enableLoggingInDebug = BuildConfig.DEBUG ? ThermalLog.LogLevel.DEBUG : ThermalLog.LogLevel.NONE;
 
@@ -74,14 +83,14 @@ public class MainActivityFlir extends AppCompatActivity {
         //ThermalLog will show log from the Thermal SDK in standards android log framework
         ThermalSdkAndroid.init(getApplicationContext(), enableLoggingInDebug);
 
-        permissionHandler = new PermissionHandler(showMessage, MainActivityFlir.this);
+        permissionHandler = new PermissionHandler(showMessage, FlirActivity.this);
 
         cameraHandler = new CameraHandler();
 
         setupViews();
-
-        showSDKversion(ThermalSdkAndroid.getVersion());
-        showSDKCommitHash(ThermalSdkAndroid.getCommitHash());
+//
+//        showSDKversion(ThermalSdkAndroid.getVersion());
+//        showSDKCommitHash(ThermalSdkAndroid.getCommitHash());
     }
 
     @Override
@@ -170,12 +179,12 @@ public class MainActivityFlir extends AppCompatActivity {
 
         @Override
         public void permissionDenied(Identity identity) {
-            MainActivityFlir.this.showMessage.show("Permission was denied for identity ");
+            FlirActivity.this.showMessage.show("Permission was denied for identity ");
         }
 
         @Override
         public void error(UsbPermissionHandler.UsbPermissionListener.ErrorType errorType, final Identity identity) {
-            MainActivityFlir.this.showMessage.show("Error when asking for permission for FLIR ONE, error:" + errorType + " identity:" + identity);
+            FlirActivity.this.showMessage.show("Error when asking for permission for FLIR ONE, error:" + errorType + " identity:" + identity);
         }
     };
 
@@ -217,7 +226,7 @@ public class MainActivityFlir extends AppCompatActivity {
      */
     private void updateConnectionText(Identity identity, String status) {
         String deviceId = identity != null ? identity.deviceId : "";
-       // connectionStatus.setText(getString(R.string.connection_status_text, deviceId + " " + status));
+        connectionStatus.setText(getString(R.string.connection_status_text, deviceId + " " + status));
     }
 
     /**
@@ -240,12 +249,12 @@ public class MainActivityFlir extends AppCompatActivity {
     private final CameraHandler.DiscoveryStatus discoveryStatusListener = new CameraHandler.DiscoveryStatus() {
         @Override
         public void started() {
-          //  discoveryStatus.setText(getString(R.string.connection_status_text, "discovering"));
+            discoveryStatus.setText(getString(R.string.connection_status_text, "discovering"));
         }
 
         @Override
         public void stopped() {
-          //  discoveryStatus.setText(getString(R.string.connection_status_text, "not discovering"));
+            discoveryStatus.setText(getString(R.string.connection_status_text, "not discovering"));
         }
     };
 
@@ -330,7 +339,7 @@ public class MainActivityFlir extends AppCompatActivity {
                 @Override
                 public void run() {
                     stopDiscovery();
-                    MainActivityFlir.this.showMessage.show("onDiscoveryError communicationInterface:" + communicationInterface + " errorCode:" + errorCode);
+                    FlirActivity.this.showMessage.show("onDiscoveryError communicationInterface:" + communicationInterface + " errorCode:" + errorCode);
                 }
             });
         }
@@ -339,19 +348,19 @@ public class MainActivityFlir extends AppCompatActivity {
     private final ShowMessage showMessage = new ShowMessage() {
         @Override
         public void show(String message) {
-            Toast.makeText(MainActivityFlir.this, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(FlirActivity.this, message, Toast.LENGTH_SHORT).show();
         }
     };
 
-    private void showSDKversion(String version) {
-        TextView sdkVersionTextView = findViewById(R.id.sdk_version);
-        String sdkVersionText = "Version 0";
-        sdkVersionTextView.setText(sdkVersionText);
-    }
+//    private void showSDKversion(String version) {
+//        TextView sdkVersionTextView = findViewById(R.id.sdk_version);
+//        String sdkVersionText = getString(R.string.sdk_version_text, version);
+//        sdkVersionTextView.setText(sdkVersionText);
+//    }
 
     private void showSDKCommitHash(String version) {
         TextView sdkVersionTextView = findViewById(R.id.sdk_commit_hash);
-        String sdkVersionText = "commit version IDK tbh";
+        String sdkVersionText = getString(R.string.sdk_commit_hash_text, version);
         sdkVersionTextView.setText(sdkVersionText);
     }
 

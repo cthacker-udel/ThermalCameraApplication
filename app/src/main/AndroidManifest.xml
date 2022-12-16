@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThermalApplication">
         <activity
+            android:name=".FlirActivity"
+            android:exported="false"
+            android:label="@string/title_activity_flir"
+            android:theme="@style/Theme.ThermalApplication.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".DisplayPost"
             android:exported="false"
             android:label="@string/title_activity_display_post"

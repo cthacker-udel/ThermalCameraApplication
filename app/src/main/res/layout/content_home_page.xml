@@ -21,7 +21,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_editor_absoluteX="144dp"
-            app:layout_editor_absoluteY="500dp" />
+            app:layout_editor_absoluteY="500dp"
+            android:id="@+id/homePageCameraButton"
+            />
 
         <ImageView
             android:layout_width="45dp"

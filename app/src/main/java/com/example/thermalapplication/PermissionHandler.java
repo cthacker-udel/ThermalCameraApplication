@@ -48,9 +48,9 @@ import androidx.core.content.ContextCompat;
 public class PermissionHandler {
 
     private static final String TAG = "PermissionHandler";
-    private final MainActivityFlir mainActivity;
+    private final FlirActivity mainActivity;
 
-    MainActivityFlir.ShowMessage showMessage;
+    FlirActivity.ShowMessage showMessage;
 
     @VisibleForTesting
     static String[] PERMISSIONS_FOR_NW_DISCOVERY = {
@@ -76,7 +76,7 @@ public class PermissionHandler {
             Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
-    public PermissionHandler(MainActivityFlir.ShowMessage showMessage, MainActivityFlir mainActivity) {
+    public PermissionHandler(FlirActivity.ShowMessage showMessage, FlirActivity mainActivity) {
         this.showMessage = showMessage;
         this.mainActivity = mainActivity;
     }

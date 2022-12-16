@@ -40,6 +40,7 @@ public class HomePage extends AppCompatActivity {
     FirebaseFirestore db;
     PostsFirestoreManager postsFirestoreManager;
     ImageView userSettingsIcon;
+    ImageView homePageCameraIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,10 @@ public class HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
         this.layout = (ConstraintLayout)findViewById(R.id.homePageInclude);
         this.userSettingsIcon = findViewById(R.id.userSettingsIcon);
+        this.homePageCameraIcon = findViewById(R.id.homePageCameraButton);
         this.db = FirebaseFirestore.getInstance();
         this.postsFirestoreManager = new PostsFirestoreManager(this.db);
-        Post[] posts = this.postsFirestoreManager.fetchAllPosts();
+        Post[] posts = new Post[] {}; //this.postsFirestoreManager.fetchAllPosts();
         ScrollView homepageScrollView = (ScrollView) this.layout.findViewById(R.id.homePageScrollView);
         // Streams all posts and adds each one
         if (posts.length == 0) {
@@ -71,6 +73,13 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomePage.this, UserSettings.class));
+            }
+        });
+
+        this.homePageCameraIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HomePage.this, FlirActivity.class));
             }
         });
     }
