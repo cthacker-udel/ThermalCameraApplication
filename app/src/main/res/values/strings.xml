@@ -51,4 +51,6 @@
     <string name="title_activity_display_post">DisplayPost</string>
     <string name="mainTitle">Thermal Camera Application</string>
     <string name="mainAuthors">Author: IshwarKumarMunirathinamAnanthaSekaran, CamThackThack, YoungTree, KidNamedFinger</string>
+    <string name="createPostPageDescriptionField">description</string>
+    <string name="createPostTitle">Create Post</string>
 </resources>
