@@ -13,10 +13,12 @@ package com.example.thermalapplication;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,8 @@ import com.flir.thermalsdk.live.discovery.DiscoveryEventListener;
 import com.flir.thermalsdk.log.ThermalLog;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -80,6 +84,7 @@ public class FlirActivity extends AppCompatActivity {
 
     private ImageView msxImage;
     private ImageView photoImage;
+    //private ImageView testPhoto;
 
     private final LinkedBlockingQueue<FrameDataHolder> framesBuffer = new LinkedBlockingQueue<>(21);
     private final UsbPermissionHandler usbPermissionHandler = new UsbPermissionHandler();
@@ -99,6 +104,7 @@ public class FlirActivity extends AppCompatActivity {
         this.disconnectButton = findViewById(R.id.disconnect_any);
         this.startDiscoveryButton = findViewById(R.id.start_discovery);
         this.flirScreenshotButton = findViewById(R.id.flir_screenshot_button);
+        //this.testPhoto = findViewById(R.id.testPicture);
 
         ThermalLog.LogLevel enableLoggingInDebug = BuildConfig.DEBUG ? ThermalLog.LogLevel.DEBUG : ThermalLog.LogLevel.NONE;
 
@@ -122,6 +128,8 @@ public class FlirActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    Toast.makeText(FlirActivity.this, "Camera must be live to take screenshot", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -162,7 +170,6 @@ public class FlirActivity extends AppCompatActivity {
         cameraHandler.performNuc();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     @NonNull
     public Uri saveBitmap(@NonNull final Context context, @NonNull final Bitmap bitmap,
                           @NonNull final Bitmap.CompressFormat format,
@@ -209,15 +216,25 @@ public class FlirActivity extends AppCompatActivity {
         BitmapDrawable bitmapDrawable = ((BitmapDrawable) msxImage.getDrawable());
         Bitmap bitmap = bitmapDrawable.getBitmap();
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         String date = format.format(new Date());
         String fileName = String.format("thermal_picture%s.png", date);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            saveBitmap(FlirActivity.this, bitmap, Bitmap.CompressFormat.PNG, "image/png", fileName);
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + "/Camera/Thermal_Pictures";
+        File thermalDirectory = new File(root);
+        boolean didMake = thermalDirectory.mkdirs();
+        File newImage = new File(thermalDirectory, fileName);
+        try {
+            FileOutputStream out = new FileOutputStream(newImage);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        MediaScannerConnection.scanFile(this, new String[]{ newImage.getPath() }, new String[]{"image/jpecg"}, null);
+
         Toast.makeText(FlirActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
     }
 
