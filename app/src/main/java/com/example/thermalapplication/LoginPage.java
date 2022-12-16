@@ -20,8 +20,6 @@ import android.widget.TextView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
-
 import helpers.RegularExpressions;
 import repository.firestore.manager.UserFirestoreManager;
 

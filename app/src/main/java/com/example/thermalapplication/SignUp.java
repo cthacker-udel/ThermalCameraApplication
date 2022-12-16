@@ -2,8 +2,6 @@ package com.example.thermalapplication;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
@@ -14,19 +12,13 @@ import android.widget.EditText;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import com.example.thermalapplication.databinding.ActivitySignUpBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 import helpers.RegularExpressions;
 import repository.firestore.datamodel.User;
-import repository.firestore.manager.FirestoreManager;
 import repository.firestore.manager.UserFirestoreManager;
 
 class FormState {
