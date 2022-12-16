@@ -10,10 +10,18 @@
  * ******************************************************************/
 package com.example.thermalapplication;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.flir.thermalsdk.ErrorCode;
@@ -32,8 +42,13 @@ import com.flir.thermalsdk.live.connectivity.ConnectionStatusListener;
 import com.flir.thermalsdk.live.discovery.DiscoveryEventListener;
 import com.flir.thermalsdk.log.ThermalLog;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -57,6 +72,8 @@ public class FlirActivity extends AppCompatActivity {
     private CameraHandler cameraHandler;
     private Button connectButton;
     private Button disconnectButton;
+    private Button startDiscoveryButton;
+    private Button flirScreenshotButton;
 
     private Identity connectedIdentity = null;
     private TextView discoveryStatus;
@@ -80,6 +97,8 @@ public class FlirActivity extends AppCompatActivity {
         setContentView(R.layout.activity_flir);
         this.connectButton = findViewById(R.id.connect_flir_one);
         this.disconnectButton = findViewById(R.id.disconnect_any);
+        this.startDiscoveryButton = findViewById(R.id.start_discovery);
+        this.flirScreenshotButton = findViewById(R.id.flir_screenshot_button);
 
         ThermalLog.LogLevel enableLoggingInDebug = BuildConfig.DEBUG ? ThermalLog.LogLevel.DEBUG : ThermalLog.LogLevel.NONE;
 
@@ -93,9 +112,19 @@ public class FlirActivity extends AppCompatActivity {
         cameraHandler = new CameraHandler();
 
         setupViews();
-//
-//        showSDKversion(ThermalSdkAndroid.getVersion());
-//        showSDKCommitHash(ThermalSdkAndroid.getCommitHash());
+
+        this.flirScreenshotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (connectButton.getText().toString().equalsIgnoreCase("Connected")) {
+                    try {
+                        saveImage();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -131,6 +160,65 @@ public class FlirActivity extends AppCompatActivity {
 
     public void performNuc(View view) {
         cameraHandler.performNuc();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @NonNull
+    public Uri saveBitmap(@NonNull final Context context, @NonNull final Bitmap bitmap,
+                          @NonNull final Bitmap.CompressFormat format,
+                          @NonNull final String mimeType,
+                          @NonNull final String displayName) throws IOException {
+
+        final ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
+        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
+
+        final ContentResolver resolver = context.getContentResolver();
+        Uri uri = null;
+
+        try {
+            final Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            uri = resolver.insert(contentUri, values);
+
+            if (uri == null)
+                throw new IOException("Failed to create new MediaStore record.");
+
+            try (final OutputStream stream = resolver.openOutputStream(uri)) {
+                if (stream == null)
+                    throw new IOException("Failed to open output stream.");
+
+                if (!bitmap.compress(format, 95, stream))
+                    throw new IOException("Failed to save bitmap.");
+            }
+
+            return uri;
+        }
+        catch (IOException e) {
+            if (uri != null) {
+                // Don't leave an orphan entry in the MediaStore
+                resolver.delete(uri, null, null);
+            }
+
+            throw e;
+        }
+    }
+
+    private void saveImage() throws IOException {
+
+        BitmapDrawable bitmapDrawable = ((BitmapDrawable) msxImage.getDrawable());
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String date = format.format(new Date());
+        String fileName = String.format("thermal_picture%s.png", date);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveBitmap(FlirActivity.this, bitmap, Bitmap.CompressFormat.PNG, "image/png", fileName);
+        }
+        Toast.makeText(FlirActivity.this, "Image Saved!", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -258,12 +346,14 @@ public class FlirActivity extends AppCompatActivity {
     private final CameraHandler.DiscoveryStatus discoveryStatusListener = new CameraHandler.DiscoveryStatus() {
         @Override
         public void started() {
-            discoveryStatus.setText(getString(R.string.connection_status_text, "discovering"));
+            startDiscoveryButton.setText(getString(R.string.connection_status_text, "Discovering"));
+            startDiscoveryButton.setBackgroundColor(Color.parseColor("#4CAF50"));
         }
 
         @Override
         public void stopped() {
-            discoveryStatus.setText(getString(R.string.connection_status_text, "not discovering"));
+            startDiscoveryButton.setText(getString(R.string.connection_status_text, "Discover"));
+            startDiscoveryButton.setBackgroundColor(Color.parseColor("#FF000000"));
         }
     };
 

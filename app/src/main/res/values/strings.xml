@@ -68,4 +68,5 @@
     <string name="title_activity_flir">FlirActivity</string>
     <string name="flir_activity_image_description">image with IR and visual data mixed</string>
     <string name="flir_activity_original_image_description">image with only visual image</string>
+    <string name="flir_activity_screenshot">Screenshot</string>
 </resources>
