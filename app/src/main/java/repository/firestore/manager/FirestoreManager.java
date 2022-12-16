@@ -1,11 +1,6 @@
 package repository.firestore.manager;
 
 import android.content.Context;
-import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,7 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -90,39 +84,28 @@ public class FirestoreManager implements iFirestoreManager {
         if (this.snapshot == null) {
             return null;
         } else {
-            I value = this.snapshot.get(field, theClass);
-            return value;
+            return this.snapshot.get(field, theClass);
         }
     }
 
     @Override
-    public <I> boolean update(String field, I updateValue) {
+    public <I> void update(String field, I updateValue, final OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
         if (this.snapshot == null || this.reference == null) {
-            return false;
+            return;
         }
-        Task<Void> result = this.reference.update(field, updateValue);
-        return result.isSuccessful();
+        this.reference.update(field, updateValue).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
-    public <I> boolean updateFunction(String field, Class<I> theClass, Function<I, I> func) {
-        if (this.snapshot == null || this.reference == null) {
-            return false;
-        }
-        Task<Void> result = this.reference.update(field, func.apply(query(field, theClass)));
-        return result.isSuccessful();
+    public <I> void updateFunction(String field, Class<I> theClass, Function<I, I> func, OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
+        this.reference.update(field, func.apply(query(field, theClass))).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
     @Override
-    public boolean delete() {
+    public void delete(OnSuccessListener<? super Void> onSuccessListener, OnFailureListener onFailureListener) {
         if (this.snapshot == null || this.reference == null) {
-            return false;
+            return;
         }
-        Task<Void> result = this.reference.delete();
-        if (result.isSuccessful()) {
-            this.reference = null;
-            this.snapshot = null;
-        }
-        return result.isSuccessful();
+        this.reference.delete().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
     @Override

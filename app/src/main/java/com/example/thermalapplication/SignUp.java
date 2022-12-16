@@ -215,10 +215,11 @@ public class SignUp extends AppCompatActivity {
                 User newUser = new User();
                 newUser.setPassword(password.getText().toString()).setUsername(username.getText().toString()).setEmail(email.getText().toString());
                 userFirestoreManager.addUserV2(newUser, ListenerFuncGenerator.generateOnSuccessListener(e -> {
-                    Toast.makeText(SignUp.this, "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUp.this, "Successfully added a User", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(SignUp.this, LoginPage.class));
                     return null;
                 }), ListenerFuncGenerator.generateFailureListener(e -> {
+                    Toast.makeText(SignUp.this, "Failed to add a User", Toast.LENGTH_SHORT).show();
                     Log.w("Exception", "Error Adding User", e);
                     return null;
                 }));

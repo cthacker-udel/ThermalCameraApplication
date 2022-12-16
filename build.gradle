@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.android.tools.build:gradle:7.3.1'
     }
 }
 
@@ -19,5 +20,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
