@@ -10,10 +10,13 @@
  * ******************************************************************/
 package com.example.thermalapplication;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,11 +55,11 @@ public class FlirActivity extends AppCompatActivity {
 
     //Handles network camera operations
     private CameraHandler cameraHandler;
+    private Button connectButton;
+    private Button disconnectButton;
 
     private Identity connectedIdentity = null;
-    private TextView connectionStatus;
     private TextView discoveryStatus;
-    private TextView deviceInfo;
 
     private ImageView msxImage;
     private ImageView photoImage;
@@ -75,6 +78,8 @@ public class FlirActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flir);
+        this.connectButton = findViewById(R.id.connect_flir_one);
+        this.disconnectButton = findViewById(R.id.disconnect_any);
 
         ThermalLog.LogLevel enableLoggingInDebug = BuildConfig.DEBUG ? ThermalLog.LogLevel.DEBUG : ThermalLog.LogLevel.NONE;
 
@@ -193,14 +198,17 @@ public class FlirActivity extends AppCompatActivity {
             try {
                 cameraHandler.connect(identity, connectionStatusListener);
                 runOnUiThread(() -> {
-                    updateConnectionText(identity, "CONNECTED");
-                    deviceInfo.setText(cameraHandler.getDeviceInfo());
+                    updateConnectionText(identity, "Connected");
+                    connectButton.setBackgroundColor(Color.parseColor("#4CAF50"));
+                    connectButton.setEnabled(false);
                 });
                 cameraHandler.startStream(streamDataListener);
             } catch (IOException e) {
                 runOnUiThread(() -> {
                     Log.d(TAG, "Could not connect: " + e);
                     updateConnectionText(identity, "DISCONNECTED");
+                    connectButton.setBackgroundColor(Color.parseColor("#FF000000"));
+                    connectButton.setEnabled(true);
                 });
             }
         }).start();
@@ -216,7 +224,9 @@ public class FlirActivity extends AppCompatActivity {
         new Thread(() -> {
             cameraHandler.disconnect();
             runOnUiThread(() -> {
-                updateConnectionText(null, "DISCONNECTED");
+                updateConnectionText(null, "Connect");
+                connectButton.setBackgroundColor(Color.parseColor("#FF000000"));
+                connectButton.setEnabled(true);
             });
         }).start();
     }
@@ -225,8 +235,7 @@ public class FlirActivity extends AppCompatActivity {
      * Update the UI text for connection status
      */
     private void updateConnectionText(Identity identity, String status) {
-        String deviceId = identity != null ? identity.deviceId : "";
-        connectionStatus.setText(getString(R.string.connection_status_text, deviceId + " " + status));
+        connectButton.setText(status);
     }
 
     /**
@@ -352,23 +361,8 @@ public class FlirActivity extends AppCompatActivity {
         }
     };
 
-//    private void showSDKversion(String version) {
-//        TextView sdkVersionTextView = findViewById(R.id.sdk_version);
-//        String sdkVersionText = getString(R.string.sdk_version_text, version);
-//        sdkVersionTextView.setText(sdkVersionText);
-//    }
-
-    private void showSDKCommitHash(String version) {
-        TextView sdkVersionTextView = findViewById(R.id.sdk_commit_hash);
-        String sdkVersionText = getString(R.string.sdk_commit_hash_text, version);
-        sdkVersionTextView.setText(sdkVersionText);
-    }
-
     private void setupViews() {
-        connectionStatus = findViewById(R.id.connection_status_text);
         discoveryStatus = findViewById(R.id.discovery_status);
-        deviceInfo = findViewById(R.id.device_info_text);
-
         msxImage = findViewById(R.id.msx_image);
         photoImage = findViewById(R.id.photo_image);
     }
